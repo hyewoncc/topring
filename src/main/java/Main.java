@@ -1,5 +1,4 @@
 import java.sql.SQLException;
-import springbook.GoogleUserDao;
 import springbook.User;
 import springbook.UserDao;
 
@@ -7,7 +6,7 @@ public class Main {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
 
-        UserDao userDao = new GoogleUserDao();
+        UserDao userDao = new UserDao();
 
         User user = new User("hyewoncc2", "최혜원", "password");
         userDao.add(user);
