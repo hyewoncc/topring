@@ -6,7 +6,7 @@ public class UserDaoTest {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
 
-        UserDao userDao = new UserDao(new GoogleDBConnector());
+        UserDao userDao = new DaoFactory().userDao();
 
         User user = new User("hyewoncc3", "최혜원", "password");
         userDao.add(user);
