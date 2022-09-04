@@ -14,10 +14,7 @@ public class UserDao {
     public static final String MYSQL_PASSWORD = "book";
 
     public void add(final User user) throws ClassNotFoundException, SQLException {
-        Class.forName(MYSQL_JDBC_DRIVER);
-        Connection connection = DriverManager.getConnection(
-                MYSQL_URL, MYSQL_USER, MYSQL_PASSWORD
-        );
+        Connection connection = getConnection();
 
         PreparedStatement statement = connection.prepareStatement(
                 "insert into users(id, name, password) values(?, ?, ?)"
@@ -33,10 +30,7 @@ public class UserDao {
     }
 
     public User get(final String id) throws ClassNotFoundException, SQLException {
-        Class.forName(MYSQL_JDBC_DRIVER);
-        Connection connection = DriverManager.getConnection(
-                MYSQL_URL, MYSQL_USER, MYSQL_PASSWORD
-        );
+        Connection connection = getConnection();
 
         PreparedStatement statement = connection.prepareStatement(
                 "select id, name, password from users where id = ?"
@@ -56,5 +50,12 @@ public class UserDao {
         connection.close();
 
         return user;
+    }
+
+    private Connection getConnection() throws ClassNotFoundException, SQLException {
+        Class.forName(MYSQL_JDBC_DRIVER);
+        return DriverManager.getConnection(
+                MYSQL_URL, MYSQL_USER, MYSQL_PASSWORD
+        );
     }
 }
