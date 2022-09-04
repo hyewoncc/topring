@@ -9,8 +9,8 @@ public class UserDao {
 
     private DBConnector dbConnector;
 
-    public UserDao() {
-        this.dbConnector = new GoogleDBConnector();
+    public UserDao(final DBConnector dbConnector) {
+        this.dbConnector = dbConnector;
     }
 
     public void add(final User user) throws ClassNotFoundException, SQLException {
