@@ -1,17 +1,11 @@
 package springbook;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserDao {
-
-    public static final String MYSQL_JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    public static final String MYSQL_URL = "jdbc:mysql://localhost:3306/springbook";
-    public static final String MYSQL_USER = "spring";
-    public static final String MYSQL_PASSWORD = "book";
+public abstract class UserDao {
 
     public void add(final User user) throws ClassNotFoundException, SQLException {
         Connection connection = getConnection();
@@ -52,10 +46,5 @@ public class UserDao {
         return user;
     }
 
-    private Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName(MYSQL_JDBC_DRIVER);
-        return DriverManager.getConnection(
-                MYSQL_URL, MYSQL_USER, MYSQL_PASSWORD
-        );
-    }
+    public abstract Connection getConnection() throws ClassNotFoundException, SQLException;
 }
