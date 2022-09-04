@@ -13,6 +13,7 @@ repositories {
 }
 
 dependencies {
+    implementation ("mysql:mysql-connector-java:8.0.28")
 }
 
 tasks.getByName<Test>("test") {
