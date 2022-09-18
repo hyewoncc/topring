@@ -1,5 +1,7 @@
 plugins {
     id("java")
+    id("org.springframework.boot") version "2.3.3.RELEASE"
+    id("io.spring.dependency-management") version "1.0.10.RELEASE"
 }
 
 group = "org.example"
@@ -13,6 +15,9 @@ repositories {
 }
 
 dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("mysql:mysql-connector-java")
+    implementation("org.springframework:spring-jdbc")
 }
 
 tasks.getByName<Test>("test") {
