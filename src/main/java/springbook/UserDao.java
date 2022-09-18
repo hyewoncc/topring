@@ -4,17 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.sql.DataSource;
 
 public class UserDao {
 
-    private DBConnector dbConnector;
-
-    public UserDao(final DBConnector dbConnector) {
-        this.dbConnector = dbConnector;
-    }
+    private DataSource dataSource;
 
     public void add(final User user) throws ClassNotFoundException, SQLException {
-        Connection connection = dbConnector.makeConnection();
+        Connection connection = dataSource.getConnection();
 
         PreparedStatement statement = connection.prepareStatement(
                 "insert into users(id, name, password) values(?, ?, ?)"
@@ -30,7 +27,7 @@ public class UserDao {
     }
 
     public User get(final String id) throws ClassNotFoundException, SQLException {
-        Connection connection = dbConnector.makeConnection();
+        Connection connection = dataSource.getConnection();
 
         PreparedStatement statement = connection.prepareStatement(
                 "select id, name, password from users where id = ?"
@@ -50,5 +47,9 @@ public class UserDao {
         connection.close();
 
         return user;
+    }
+
+    public void setDataSource(final DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 }

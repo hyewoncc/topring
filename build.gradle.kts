@@ -16,7 +16,8 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation ("mysql:mysql-connector-java")
+    implementation("mysql:mysql-connector-java")
+    implementation("org.springframework:spring-jdbc")
 }
 
 tasks.getByName<Test>("test") {

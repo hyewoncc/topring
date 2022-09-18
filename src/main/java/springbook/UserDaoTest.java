@@ -8,7 +8,7 @@ public class UserDaoTest {
 
         UserDao userDao = new DaoFactory().userDao();
 
-        User user = new User("hyewoncc3", "최혜원", "password");
+        User user = new User("hyewoncc4", "최혜원", "password");
         userDao.add(user);
 
         System.out.println("등록 성공");
