@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.sql.DataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -37,16 +38,22 @@ public class UserDao {
         statement.setString(1, id);
 
         ResultSet resultSet = statement.executeQuery();
-        resultSet.next();
+        User user = null;
 
-        User user = new User();
-        user.setId(resultSet.getString("id"));
-        user.setName(resultSet.getString("name"));
-        user.setPassword(resultSet.getString("password"));
+        if (resultSet.next()) {
+            user = new User();
+            user.setId(resultSet.getString("id"));
+            user.setName(resultSet.getString("name"));
+            user.setPassword(resultSet.getString("password"));
+        }
 
         resultSet.close();
         statement.close();
         connection.close();
+
+        if (user == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
 
         return user;
     }
