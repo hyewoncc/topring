@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.sql.DataSource;
+import org.springframework.stereotype.Controller;
 
+@Controller
 public class UserDao {
 
     private DataSource dataSource;
@@ -47,6 +49,35 @@ public class UserDao {
         connection.close();
 
         return user;
+    }
+
+    public int getCount() throws SQLException {
+        Connection connection = dataSource.getConnection();
+
+        PreparedStatement statement = connection.prepareStatement(
+                "select count(*) from users"
+        );
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+        int count = resultSet.getInt(1);
+
+        resultSet.close();
+        statement.close();
+        connection.close();
+
+        return count;
+    }
+
+    public void deleteAll() throws SQLException {
+        Connection connection = dataSource.getConnection();
+
+        PreparedStatement statement = connection.prepareStatement(
+                "delete from users"
+        );
+        statement.executeUpdate();
+
+        statement.close();
+        connection.close();
     }
 
     public void setDataSource(final DataSource dataSource) {

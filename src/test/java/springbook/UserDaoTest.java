@@ -1,6 +1,6 @@
 package springbook;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.SQLException;
 import org.junit.jupiter.api.DisplayName;
@@ -16,11 +16,15 @@ class UserDaoTest {
         ApplicationContext applicationContext = new AnnotationConfigApplicationContext(DaoFactory.class);
         UserDao userDao = applicationContext.getBean("userDao", UserDao.class);
 
+        userDao.deleteAll();
+        assertThat(userDao.getCount()).isEqualTo(0);
+
         User user = new User("yellow-cat", "노란 고양이", "password");
         userDao.add(user);
+        assertThat(userDao.getCount()).isEqualTo(1);
 
         User foundUser = userDao.get(user.getId());
-        assertEquals(user.getName(), foundUser.getName());
-        assertEquals(user.getPassword(), foundUser.getPassword());
+        assertThat(foundUser.getName()).isEqualTo(user.getName());
+        assertThat(foundUser.getPassword()).isEqualTo(user.getPassword());
     }
 }
