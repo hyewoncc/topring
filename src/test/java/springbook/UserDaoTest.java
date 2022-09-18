@@ -4,12 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.sql.SQLException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -18,14 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 class UserDaoTest {
 
     @Autowired
-    private ApplicationContext applicationContext;
-
     private UserDao userDao;
-
-    @BeforeEach
-    void setUp() {
-        userDao = applicationContext.getBean("userDao", UserDao.class);
-    }
 
     @DisplayName("사용자 추가 및 조회")
     @Test
