@@ -10,7 +10,7 @@ public class UserDao {
 
     private DataSource dataSource;
 
-    public void add(final User user) throws ClassNotFoundException, SQLException {
+    public void add(final User user) throws SQLException {
         Connection connection = dataSource.getConnection();
 
         PreparedStatement statement = connection.prepareStatement(
@@ -26,7 +26,7 @@ public class UserDao {
         connection.close();
     }
 
-    public User get(final String id) throws ClassNotFoundException, SQLException {
+    public User get(final String id) throws SQLException {
         Connection connection = dataSource.getConnection();
 
         PreparedStatement statement = connection.prepareStatement(
