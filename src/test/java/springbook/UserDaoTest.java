@@ -4,36 +4,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.sql.SQLException;
-import javax.sql.DataSource;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
+@SpringBootTest
 class UserDaoTest {
 
+    @Autowired
     private UserDao userDao;
-    private JdbcContext jdbcContext;
-
-    @BeforeEach
-    void setUp() {
-        userDao = new UserDao();
-        userDao.setDataSource(dataSource());
-        jdbcContext = new JdbcContext(dataSource());
-        userDao.setJdbcContext(jdbcContext);
-    }
-
-    private DataSource dataSource() {
-        SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
-
-        dataSource.setDriverClass(com.mysql.cj.jdbc.Driver.class);
-        dataSource.setUrl("jdbc:mysql://localhost:3306/springbook?serverTimezone=Asia/Seoul");
-        dataSource.setUsername("spring");
-        dataSource.setPassword("book");
-
-        return dataSource;
-    }
 
     @DisplayName("사용자 추가 및 조회")
     @Test

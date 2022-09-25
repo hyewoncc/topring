@@ -9,8 +9,13 @@ import org.springframework.dao.EmptyResultDataAccessException;
 
 public class UserDao {
 
-    private JdbcContext jdbcContext;
-    private DataSource dataSource;
+    private final JdbcContext jdbcContext;
+    private final DataSource dataSource;
+
+    public UserDao(final JdbcContext jdbcContext, final DataSource dataSource) {
+        this.jdbcContext = jdbcContext;
+        this.dataSource = dataSource;
+    }
 
     public void add(final User user) throws SQLException {
         jdbcContext.workWithStatementStrategy((final Connection connection) -> {
@@ -67,13 +72,5 @@ public class UserDao {
                 return count;
             }
         }
-    }
-
-    public void setJdbcContext(final JdbcContext jdbcContext) {
-        this.jdbcContext = jdbcContext;
-    }
-
-    public void setDataSource(final DataSource dataSource) {
-        this.dataSource = dataSource;
     }
 }
