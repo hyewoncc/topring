@@ -75,16 +75,13 @@ public class UserDao {
         return count;
     }
 
-    public void deleteAll() throws SQLException {
-        Connection connection = dataSource.getConnection();
-
-        PreparedStatement statement = connection.prepareStatement(
-                "delete from users"
-        );
-        statement.executeUpdate();
-
-        statement.close();
-        connection.close();
+    public void deleteAll() {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement("delete from users")) {
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setDataSource(final DataSource dataSource) {
