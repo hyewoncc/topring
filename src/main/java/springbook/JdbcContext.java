@@ -19,6 +19,24 @@ public class JdbcContext {
                 connection.prepareStatement(sql));
     }
 
+    public void execute(final String sql, final Object... args) throws SQLException {
+        workWithStatementStrategy((final Connection connection) -> {
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            for (int i = 1; i <= args.length; i++) {
+                setArgument(statement, i, args[i - 1]);
+            }
+            return statement;
+        });
+    }
+
+    private void setArgument(final PreparedStatement statement, final int index, final Object argument)
+            throws SQLException {
+        if (argument instanceof String) {
+            statement.setString(index, (String) argument);
+        }
+    }
+
     public void workWithStatementStrategy(final StatementStrategy strategy) throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = strategy.makeStatement(connection)) {
