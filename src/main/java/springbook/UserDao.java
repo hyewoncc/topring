@@ -50,20 +50,21 @@ public class UserDao {
     }
 
     public int getCount() throws SQLException {
-        Connection connection = dataSource.getConnection();
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "select count(*) from users")) {
 
-        PreparedStatement statement = connection.prepareStatement(
-                "select count(*) from users"
-        );
-        ResultSet resultSet = statement.executeQuery();
-        resultSet.next();
-        int count = resultSet.getInt(1);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                int count = resultSet.getInt(1);
 
-        resultSet.close();
-        statement.close();
-        connection.close();
+                resultSet.close();
+                statement.close();
+                connection.close();
 
-        return count;
+                return count;
+            }
+        }
     }
 
     public void deleteAll() {
