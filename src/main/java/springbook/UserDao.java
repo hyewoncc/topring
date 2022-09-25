@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Controller;
+import springbook.strategy.AddStatement;
 import springbook.strategy.DeleteAllStatement;
 import springbook.strategy.StatementStrategy;
 
@@ -16,17 +17,8 @@ public class UserDao {
     private DataSource dataSource;
 
     public void add(final User user) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(
-                     "insert into users(id, name, password) values(?, ?, ?)")) {
-            statement.setString(1, user.getId());
-            statement.setString(2, user.getName());
-            statement.setString(3, user.getPassword());
-
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        StatementStrategy strategy = new AddStatement(user);
+        jdbcContextWithStatementStrategy(strategy);
     }
 
     public User get(final String id) throws SQLException {
