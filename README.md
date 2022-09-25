@@ -6,3 +6,4 @@
 ## 🏝 블로그 포스팅
 
 - [1장 오브젝트와 의존관계](https://hyewoncc.github.io/topring-chapter1/)  
+- [2장 테스트](https://hyewoncc.github.io/topring-chapter2/)
