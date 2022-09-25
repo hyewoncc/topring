@@ -11,12 +11,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class UserDao {
 
     private final DataSource dataSource;
-    private final JdbcContext jdbcContext;
     private final JdbcTemplate jdbcTemplate;
 
     public UserDao(final DataSource dataSource) {
         this.dataSource = dataSource;
-        this.jdbcContext = new JdbcContext(dataSource);
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
@@ -52,12 +50,6 @@ public class UserDao {
     }
 
     public int getCount() throws SQLException {
-        return jdbcTemplate.query(
-                (final Connection connection) ->
-                        connection.prepareStatement("select count(*) from users"),
-                (final ResultSet resultSet) -> {
-                    resultSet.next();
-                    return resultSet.getInt(1);
-                });
+        return jdbcTemplate.queryForObject("select count(*) from users", Integer.class);
     }
 }
