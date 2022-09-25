@@ -4,10 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.NoSuchElementException;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Controller;
+import springbook.strategy.DeleteAllStatement;
+import springbook.strategy.StatementStrategy;
 
 @Controller
 public class UserDao {
@@ -67,8 +68,13 @@ public class UserDao {
     }
 
     public void deleteAll() {
+        StatementStrategy strategy = new DeleteAllStatement();
+        jdbcContextWithStatementStrategy(strategy);
+    }
+
+    public void jdbcContextWithStatementStrategy(final StatementStrategy statementStrategy) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement("delete from users")) {
+             PreparedStatement statement = statementStrategy.makeStatement(connection)) {
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
