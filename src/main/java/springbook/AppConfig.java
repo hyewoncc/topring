@@ -10,12 +10,7 @@ public class AppConfig {
 
     @Bean
     public UserDao userDao() {
-        return new UserDao(jdbcContext(), dataSource());
-    }
-
-    @Bean
-    public JdbcContext jdbcContext() {
-        return new JdbcContext(dataSource());
+        return new UserDao(dataSource());
     }
 
     @Bean
