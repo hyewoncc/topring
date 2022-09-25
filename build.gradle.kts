@@ -17,7 +17,7 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("mysql:mysql-connector-java")
-    implementation("org.springframework:spring-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
