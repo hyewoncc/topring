@@ -12,6 +12,8 @@ public class AppConfig {
     public UserDao userDao() {
         UserDao userDao = new UserDao();
         userDao.setDataSource(dataSource());
+        JdbcContext jdbcContext = new JdbcContext(dataSource());
+        userDao.setJdbcContext(jdbcContext);
         return userDao;
     }
 

@@ -14,11 +14,14 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 class UserDaoTest {
 
     private UserDao userDao;
+    private JdbcContext jdbcContext;
 
     @BeforeEach
     void setUp() {
         userDao = new UserDao();
         userDao.setDataSource(dataSource());
+        jdbcContext = new JdbcContext(dataSource());
+        userDao.setJdbcContext(jdbcContext);
     }
 
     private DataSource dataSource() {

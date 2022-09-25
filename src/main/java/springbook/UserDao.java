@@ -6,16 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Controller;
-import springbook.strategy.StatementStrategy;
 
-@Controller
 public class UserDao {
 
+    private JdbcContext jdbcContext;
     private DataSource dataSource;
 
-    public void add(final User user) {
-        StatementStrategy strategy = (final Connection connection) -> {
+    public void add(final User user) throws SQLException {
+        jdbcContext.workWithStatementStrategy((final Connection connection) -> {
             PreparedStatement statement = connection.prepareStatement(
                     "insert into users(id, name, password) values(?, ?, ?)");
 
@@ -24,8 +22,12 @@ public class UserDao {
             statement.setString(3, user.getPassword());
 
             return statement;
-        };
-        jdbcContextWithStatementStrategy(strategy);
+        });
+    }
+
+    public void deleteAll() throws SQLException {
+        jdbcContext.workWithStatementStrategy((final Connection connection) ->
+                connection.prepareStatement("delete from users"));
     }
 
     public User get(final String id) throws SQLException {
@@ -67,19 +69,8 @@ public class UserDao {
         }
     }
 
-    public void deleteAll() {
-        StatementStrategy strategy = (final Connection connection) ->
-                connection.prepareStatement("delete from users");
-        jdbcContextWithStatementStrategy(strategy);
-    }
-
-    public void jdbcContextWithStatementStrategy(final StatementStrategy statementStrategy) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = statementStrategy.makeStatement(connection)) {
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void setJdbcContext(final JdbcContext jdbcContext) {
+        this.jdbcContext = jdbcContext;
     }
 
     public void setDataSource(final DataSource dataSource) {
