@@ -3,6 +3,7 @@ package springbook;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,5 +38,30 @@ class UserDaoTest {
 
         assertThatThrownBy(() -> userDao.get("unknown_id"))
                 .isInstanceOf(EmptyResultDataAccessException.class);
+    }
+
+    @DisplayName("복수 사용자 등록 수 전체 조회")
+    @Test
+    void findAll() {
+        userDao.deleteAll();
+
+        final var cat = new User("cat", "고양이", "password");
+        userDao.add(cat);
+        final var dog = new User("dog", "개", "password");
+        userDao.add(dog);
+        final var mouse = new User("mouse", "쥐", "password");
+        userDao.add(mouse);
+
+        final var result = userDao.getAll();
+        assertThat(result).isEqualTo(List.of(cat, dog, mouse));
+    }
+    
+    @DisplayName("사용자가 없을 때 전체 조회 시 빈 리스트 반환")
+    @Test
+    void findAll_noUsers_returnEmptyList() {
+        userDao.deleteAll();
+
+        final var result = userDao.getAll();
+        assertThat(result).isEmpty();
     }
 }
