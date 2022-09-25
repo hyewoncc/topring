@@ -6,32 +6,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 public class UserDao {
 
-    private final JdbcContext jdbcContext;
     private final DataSource dataSource;
+    private final JdbcContext jdbcContext;
+    private final JdbcTemplate jdbcTemplate;
 
     public UserDao(final DataSource dataSource) {
         this.dataSource = dataSource;
         this.jdbcContext = new JdbcContext(dataSource);
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     public void add(final User user) throws SQLException {
-        jdbcContext.workWithStatementStrategy((final Connection connection) -> {
-            PreparedStatement statement = connection.prepareStatement(
-                    "insert into users(id, name, password) values(?, ?, ?)");
-
-            statement.setString(1, user.getId());
-            statement.setString(2, user.getName());
-            statement.setString(3, user.getPassword());
-
-            return statement;
-        });
+        jdbcTemplate.update("insert into users(id, name, password) "
+                        + "values (?, ?, ?)",
+                user.getId(), user.getName(), user.getPassword());
     }
 
     public void deleteAll() throws SQLException {
-        jdbcContext.execute("delete from users");
+        jdbcTemplate.update("delete from users");
     }
 
     public User get(final String id) throws SQLException {
@@ -56,20 +52,12 @@ public class UserDao {
     }
 
     public int getCount() throws SQLException {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(
-                     "select count(*) from users")) {
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                resultSet.next();
-                int count = resultSet.getInt(1);
-
-                resultSet.close();
-                statement.close();
-                connection.close();
-
-                return count;
-            }
-        }
+        return jdbcTemplate.query(
+                (final Connection connection) ->
+                        connection.prepareStatement("select count(*) from users"),
+                (final ResultSet resultSet) -> {
+                    resultSet.next();
+                    return resultSet.getInt(1);
+                });
     }
 }
