@@ -3,38 +3,22 @@ package springbook;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.sql.SQLException;
-import javax.sql.DataSource;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
+@SpringBootTest
 class UserDaoTest {
 
+    @Autowired
     private UserDao userDao;
-
-    @BeforeEach
-    void setUp() {
-        userDao = new UserDao();
-        userDao.setDataSource(dataSource());
-    }
-
-    private DataSource dataSource() {
-        SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
-
-        dataSource.setDriverClass(com.mysql.cj.jdbc.Driver.class);
-        dataSource.setUrl("jdbc:mysql://localhost:3306/springbook?serverTimezone=Asia/Seoul");
-        dataSource.setUsername("spring");
-        dataSource.setPassword("book");
-
-        return dataSource;
-    }
 
     @DisplayName("사용자 추가 및 조회")
     @Test
-    void addAndGet() throws SQLException {
+    void addAndGet() {
         userDao.deleteAll();
         assertThat(userDao.getCount()).isEqualTo(0);
 
@@ -49,10 +33,35 @@ class UserDaoTest {
 
     @DisplayName("존재하지 않는 id 조회 시 예외")
     @Test
-    void get_idDoesNotExists_throwException() throws SQLException {
+    void get_idDoesNotExists_throwException() {
         userDao.deleteAll();
 
         assertThatThrownBy(() -> userDao.get("unknown_id"))
                 .isInstanceOf(EmptyResultDataAccessException.class);
+    }
+
+    @DisplayName("복수 사용자 등록 수 전체 조회")
+    @Test
+    void findAll() {
+        userDao.deleteAll();
+
+        final var cat = new User("cat", "고양이", "password");
+        userDao.add(cat);
+        final var dog = new User("dog", "개", "password");
+        userDao.add(dog);
+        final var mouse = new User("mouse", "쥐", "password");
+        userDao.add(mouse);
+
+        final var result = userDao.getAll();
+        assertThat(result).isEqualTo(List.of(cat, dog, mouse));
+    }
+    
+    @DisplayName("사용자가 없을 때 전체 조회 시 빈 리스트 반환")
+    @Test
+    void findAll_noUsers_returnEmptyList() {
+        userDao.deleteAll();
+
+        final var result = userDao.getAll();
+        assertThat(result).isEmpty();
     }
 }

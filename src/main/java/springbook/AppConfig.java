@@ -1,18 +1,16 @@
 package springbook;
 
 import javax.sql.DataSource;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
-@Configuration
+@SpringBootConfiguration
 public class AppConfig {
 
     @Bean
     public UserDao userDao() {
-        UserDao userDao = new UserDao();
-        userDao.setDataSource(dataSource());
-        return userDao;
+        return new UserDao(dataSource());
     }
 
     @Bean
