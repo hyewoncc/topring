@@ -8,13 +8,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 @SpringBootTest
 class UserDaoTest {
 
     @Autowired
-    private UserDao userDao;
+    private UserDaoJdbc userDao;
 
     @DisplayName("사용자 추가 및 조회")
     @Test
@@ -55,7 +56,7 @@ class UserDaoTest {
         final var result = userDao.getAll();
         assertThat(result).isEqualTo(List.of(cat, dog, mouse));
     }
-    
+
     @DisplayName("사용자가 없을 때 전체 조회 시 빈 리스트 반환")
     @Test
     void findAll_noUsers_returnEmptyList() {
@@ -63,5 +64,17 @@ class UserDaoTest {
 
         final var result = userDao.getAll();
         assertThat(result).isEmpty();
+    }
+
+    @DisplayName("중복된 id로 저장하면 예외 발생")
+    @Test
+    void add_duplicatedId_throwsException() {
+        userDao.deleteAll();
+
+        userDao.add(new User("black_dog", "검은개", "password"));
+
+        assertThatThrownBy(
+                () -> userDao.add(new User("black_dog", "검은개", "password"))
+        ).isInstanceOf(DuplicateKeyException.class);
     }
 }
