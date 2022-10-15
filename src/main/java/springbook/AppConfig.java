@@ -4,6 +4,7 @@ import javax.sql.DataSource;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import springbook.dao.UserDaoJdbc;
 
 @SpringBootConfiguration
 public class AppConfig {

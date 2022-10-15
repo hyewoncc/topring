@@ -1,4 +1,4 @@
-package springbook;
+package springbook.user;
 
 import java.util.Objects;
 

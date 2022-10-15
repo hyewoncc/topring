@@ -1,10 +1,11 @@
-package springbook;
+package springbook.dao;
 
 import java.sql.ResultSet;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import springbook.user.User;
 
 public class UserDaoJdbc implements UserDao{
 

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import springbook.dao.UserDaoJdbc;
+import springbook.user.User;
 
 @SpringBootTest
 class UserDaoTest {
