@@ -30,7 +30,8 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public void add(final User user) {
         jdbcTemplate.update("insert into users(id, name, password, level, login, recommend) values (?, ?, ?, ?, ?, ?)",
-                user.getId(), user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend());
+                user.getId(), user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(),
+                user.getRecommend());
     }
 
     @Override
@@ -52,5 +53,14 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public int getCount() {
         return jdbcTemplate.queryForObject("select count(*) from users", Integer.class);
+    }
+
+    @Override
+    public void update(final User user) {
+        jdbcTemplate.update(
+                "update users set name = ?, password = ?, level = ?, login = ?, recommend = ? where id = ?",
+                user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend(),
+                user.getId()
+        );
     }
 }

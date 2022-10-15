@@ -2,6 +2,7 @@ package springbook;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -79,5 +80,40 @@ class UserDaoTest {
         assertThatThrownBy(
                 () -> userDao.add(new User("black_dog", "검은개", "password", Level.BASIC, 0, 0))
         ).isInstanceOf(DuplicateKeyException.class);
+    }
+
+    @DisplayName("정보 수정")
+    @Test
+    void update() {
+        userDao.deleteAll();
+
+        final var target = new User("black_dog", "검은개", "password", Level.BASIC, 0, 0);
+        userDao.add(target);
+        final var other = new User("cat", "고양이", "password", Level.BASIC, 0, 0);
+        userDao.add(other);
+
+        target.setName("까만개");
+        target.setPassword("passwords");
+        target.setLevel(Level.GOLD);
+        target.setLogin(10);
+        target.setRecommend(10);
+        userDao.update(target);
+
+        final var result = userDao.get(target.getId());
+        assertSameInfo(target, result);
+
+        final var otherResult = userDao.get(other.getId());
+        assertSameInfo(other, otherResult);
+    }
+
+    private void assertSameInfo(final User user, final User other) {
+        assertAll(
+                () -> assertThat(user.getId()).isEqualTo(other.getId()),
+                () -> assertThat(user.getName()).isEqualTo(other.getName()),
+                () -> assertThat(user.getPassword()).isEqualTo(other.getPassword()),
+                () -> assertThat(user.getLevel()).isEqualTo(other.getLevel()),
+                () -> assertThat(user.getLogin()).isEqualTo(other.getLogin()),
+                () -> assertThat(user.getRecommend()).isEqualTo(other.getRecommend())
+        );
     }
 }
