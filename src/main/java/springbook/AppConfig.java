@@ -3,6 +3,7 @@ package springbook;
 import javax.sql.DataSource;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import springbook.dao.UserDaoJdbc;
 import springbook.service.UserService;
@@ -12,7 +13,12 @@ public class AppConfig {
 
     @Bean
     public UserService userService() {
-        return new UserService(userDao(), dataSource());
+        return new UserService(userDao(), transactionManager());
+    }
+
+    @Bean
+    public DataSourceTransactionManager transactionManager() {
+        return new DataSourceTransactionManager(dataSource());
     }
 
     @Bean

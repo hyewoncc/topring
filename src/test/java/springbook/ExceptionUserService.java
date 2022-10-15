@@ -1,6 +1,6 @@
 package springbook;
 
-import javax.sql.DataSource;
+import org.springframework.transaction.PlatformTransactionManager;
 import springbook.dao.UserDao;
 import springbook.service.UserService;
 import springbook.user.User;
@@ -9,8 +9,8 @@ public class ExceptionUserService extends UserService {
 
     private String id;
 
-    public ExceptionUserService(final UserDao userDao, final DataSource dataSource, final String id) {
-        super(userDao, dataSource);
+    public ExceptionUserService(final UserDao userDao, final PlatformTransactionManager transactionManager, final String id) {
+        super(userDao, transactionManager);
         this.id = id;
     }
 

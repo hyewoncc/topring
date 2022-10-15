@@ -4,11 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.SQLException;
 import java.util.List;
-import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.PlatformTransactionManager;
 import springbook.ExceptionUserService.UserServiceTestException;
 import springbook.dao.UserDao;
 import springbook.service.UserService;
@@ -19,7 +19,7 @@ import springbook.user.User;
 class UserServiceTest {
 
     @Autowired
-    private DataSource dataSource;
+    private PlatformTransactionManager transactionManager;
 
     @Autowired
     private UserDao userDao;
@@ -112,7 +112,7 @@ class UserServiceTest {
                 goldShouldNotBeChanged
         );
 
-        UserService testUserService = new ExceptionUserService(userDao, dataSource, silverShouldNotBeUpgraded.getId());
+        UserService testUserService = new ExceptionUserService(userDao, transactionManager, silverShouldNotBeUpgraded.getId());
 
         userDao.deleteAll();
         for (User user : users) {

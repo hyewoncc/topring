@@ -1,8 +1,6 @@
 package springbook.service;
 
 import java.sql.SQLException;
-import javax.sql.DataSource;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
@@ -13,11 +11,11 @@ import springbook.user.User;
 public class UserService {
 
     private UserDao userDao;
-    private DataSource dataSource;
+    private PlatformTransactionManager transactionManager;
 
-    public UserService(final UserDao userDao, final DataSource dataSource) {
+    public UserService(final UserDao userDao, final PlatformTransactionManager transactionManager) {
         this.userDao = userDao;
-        this.dataSource = dataSource;
+        this.transactionManager = transactionManager;
     }
 
     public void add(final User user) {
@@ -28,7 +26,6 @@ public class UserService {
     }
 
     public void upgradeLevels() throws SQLException {
-        PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
         TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         try {
