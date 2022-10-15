@@ -9,8 +9,8 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 public class AppConfig {
 
     @Bean
-    public UserDao userDao() {
-        return new UserDao(dataSource());
+    public UserDaoJdbc userDao() {
+        return new UserDaoJdbc(dataSource());
     }
 
     @Bean
