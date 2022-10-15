@@ -5,9 +5,15 @@ import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import springbook.dao.UserDaoJdbc;
+import springbook.service.UserService;
 
 @SpringBootConfiguration
 public class AppConfig {
+
+    @Bean
+    public UserService userService() {
+        return new UserService(userDao());
+    }
 
     @Bean
     public UserDaoJdbc userDao() {
