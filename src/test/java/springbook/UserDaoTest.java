@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import springbook.dao.UserDaoJdbc;
+import springbook.user.Level;
 import springbook.user.User;
 
 @SpringBootTest
@@ -25,7 +26,7 @@ class UserDaoTest {
         userDao.deleteAll();
         assertThat(userDao.getCount()).isEqualTo(0);
 
-        User user = new User("yellow-cat", "노란 고양이", "password");
+        User user = new User("yellow-cat", "노란 고양이", "password", Level.BASIC, 0, 0);
         userDao.add(user);
         assertThat(userDao.getCount()).isEqualTo(1);
 
@@ -48,11 +49,11 @@ class UserDaoTest {
     void findAll() {
         userDao.deleteAll();
 
-        final var cat = new User("cat", "고양이", "password");
+        final var cat = new User("cat", "고양이", "password", Level.BASIC, 0, 0);
         userDao.add(cat);
-        final var dog = new User("dog", "개", "password");
+        final var dog = new User("dog", "개", "password", Level.BASIC, 0, 0);
         userDao.add(dog);
-        final var mouse = new User("mouse", "쥐", "password");
+        final var mouse = new User("mouse", "쥐", "password", Level.BASIC, 0, 0);
         userDao.add(mouse);
 
         final var result = userDao.getAll();
@@ -73,10 +74,10 @@ class UserDaoTest {
     void add_duplicatedId_throwsException() {
         userDao.deleteAll();
 
-        userDao.add(new User("black_dog", "검은개", "password"));
+        userDao.add(new User("black_dog", "검은개", "password", Level.BASIC, 0, 0));
 
         assertThatThrownBy(
-                () -> userDao.add(new User("black_dog", "검은개", "password"))
+                () -> userDao.add(new User("black_dog", "검은개", "password", Level.BASIC, 0, 0))
         ).isInstanceOf(DuplicateKeyException.class);
     }
 }

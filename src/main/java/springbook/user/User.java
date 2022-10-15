@@ -7,14 +7,21 @@ public class User {
     private String id;
     private String name;
     private String password;
+    private Level level;
+    private int login;
+    private int recommend;
 
     public User() {
     }
 
-    public User(final String id, final String name, final String password) {
+    public User(final String id, final String name, final String password, final Level level, final int login,
+                final int recommend) {
         this.id = id;
         this.name = name;
         this.password = password;
+        this.level = level;
+        this.login = login;
+        this.recommend = recommend;
     }
 
     public String getId() {
@@ -39,6 +46,30 @@ public class User {
 
     public void setPassword(final String password) {
         this.password = password;
+    }
+
+    public Level getLevel() {
+        return level;
+    }
+
+    public void setLevel(final Level level) {
+        this.level = level;
+    }
+
+    public int getLogin() {
+        return login;
+    }
+
+    public void setLogin(final int login) {
+        this.login = login;
+    }
+
+    public int getRecommend() {
+        return recommend;
+    }
+
+    public void setRecommend(final int recommend) {
+        this.recommend = recommend;
     }
 
     @Override
