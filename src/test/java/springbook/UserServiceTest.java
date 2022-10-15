@@ -50,10 +50,10 @@ class UserServiceTest {
     @DisplayName("조건에 따른 레벨 변경")
     @Test
     void upgradeLevels() {
-        final var basicShouldNotBeUpgraded = new User("cat", "고양이", "password", Level.BASIC, 49, 0);
-        final var basicShouldBeSilver = new User("dog", "개", "password", Level.BASIC, 50, 0);
-        final var silverShouldNotBeUpgraded = new User("bird", "새", "password", Level.SILVER, 60, 29);
-        final var silverShouldBeGold = new User("mouse", "쥐", "password", Level.SILVER, 60, 30);
+        final var basicShouldNotBeUpgraded = new User("cat", "고양이", "password", Level.BASIC, Level.SILVER.login - 1, 0);
+        final var basicShouldBeSilver = new User("dog", "개", "password", Level.BASIC, Level.SILVER.login, 0);
+        final var silverShouldNotBeUpgraded = new User("bird", "새", "password", Level.SILVER, 60, Level.GOLD.recommend - 1);
+        final var silverShouldBeGold = new User("mouse", "쥐", "password", Level.SILVER, 60, Level.GOLD.recommend);
         final var goldShouldNotBeChanged = new User("fish", "물고기", "password", Level.GOLD, 100, 100);
 
         final var users = List.of(
@@ -71,15 +71,19 @@ class UserServiceTest {
 
         userService.upgradeLevels();
 
-        assertLevel(basicShouldNotBeUpgraded, Level.BASIC);
-        assertLevel(basicShouldBeSilver, Level.SILVER);
-        assertLevel(silverShouldNotBeUpgraded, Level.SILVER);
-        assertLevel(silverShouldBeGold, Level.GOLD);
-        assertLevel(goldShouldNotBeChanged, Level.GOLD);
+        assertLevelUpgraded(basicShouldNotBeUpgraded, false);
+        assertLevelUpgraded(basicShouldBeSilver, true);
+        assertLevelUpgraded(silverShouldNotBeUpgraded, false);
+        assertLevelUpgraded(silverShouldBeGold, true);
+        assertLevelUpgraded(basicShouldNotBeUpgraded, false);
     }
 
-    private void assertLevel(final User user, final Level level) {
+    private void assertLevelUpgraded(final User user, final boolean upgraded) {
         final var result = userDao.get(user.getId());
-        assertThat(result.getLevel()).isEqualTo(level);
+        if (upgraded) {
+            assertThat(result.getLevel()).isEqualTo(user.getLevel().next());
+            return;
+        }
+        assertThat(result.getLevel()).isEqualTo(user.getLevel());
     }
 }

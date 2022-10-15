@@ -24,6 +24,21 @@ public class User {
         this.recommend = recommend;
     }
 
+    public boolean canUpgrade() {
+        return level.canUpgrade(this);
+    }
+
+    public void upgradeLevel() {
+        validateNextLevel();
+        this.level = this.level.next();
+    }
+
+    private void validateNextLevel() {
+        if (this.level.next() == null) {
+            throw new IllegalStateException(this.level + "은 업그레이드가 불가능합니다.");
+        }
+    }
+
     public String getId() {
         return id;
     }

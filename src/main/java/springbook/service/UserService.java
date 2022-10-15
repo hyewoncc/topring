@@ -23,18 +23,14 @@ public class UserService {
         final var users = userDao.getAll();
 
         for (User user : users) {
-            var changed = false;
-            if (user.getLevel() == Level.BASIC && user.getLogin() >= 50) {
-                user.setLevel(Level.SILVER);
-                changed = true;
-            } else if (user.getLevel() == Level.SILVER && user.getRecommend() >= 30) {
-                user.setLevel(Level.GOLD);
-                changed = true;
-            }
+            upgradeLevel(user);
+        }
+    }
 
-            if (changed) {
-                userDao.update(user);
-            }
+    private void upgradeLevel(final User user) {
+        if (user.canUpgrade()) {
+            user.upgradeLevel();
+            userDao.update(user);
         }
     }
 }
