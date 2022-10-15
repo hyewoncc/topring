@@ -12,6 +12,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import springbook.ExceptionUserService.UserServiceTestException;
 import springbook.dao.UserDao;
 import springbook.service.UserService;
+import springbook.service.UserServiceImpl;
+import springbook.service.UserServiceTx;
 import springbook.user.Level;
 import springbook.user.User;
 
@@ -112,7 +114,8 @@ class UserServiceTest {
                 goldShouldNotBeChanged
         );
 
-        UserService testUserService = new ExceptionUserService(userDao, transactionManager, silverShouldNotBeUpgraded.getId());
+        UserServiceImpl testUserService = new ExceptionUserService(userDao, silverShouldNotBeUpgraded.getId());
+        UserServiceTx userServiceTx = new UserServiceTx(testUserService, transactionManager);
 
         userDao.deleteAll();
         for (User user : users) {
@@ -120,8 +123,8 @@ class UserServiceTest {
         }
 
         try {
-            testUserService.upgradeLevels();
-        } catch (UserServiceTestException | SQLException ignored) {
+            userServiceTx.upgradeLevels();
+        } catch (UserServiceTestException ignored) {
         }
 
         assertLevelUpgraded(basicShouldBeSilver, false);

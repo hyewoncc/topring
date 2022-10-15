@@ -1,16 +1,15 @@
 package springbook;
 
-import org.springframework.transaction.PlatformTransactionManager;
 import springbook.dao.UserDao;
-import springbook.service.UserService;
+import springbook.service.UserServiceImpl;
 import springbook.user.User;
 
-public class ExceptionUserService extends UserService {
+public class ExceptionUserService extends UserServiceImpl {
 
     private String id;
 
-    public ExceptionUserService(final UserDao userDao, final PlatformTransactionManager transactionManager, final String id) {
-        super(userDao, transactionManager);
+    public ExceptionUserService(final UserDao userDao, final String id) {
+        super(userDao);
         this.id = id;
     }
 
