@@ -2,7 +2,6 @@ package springbook;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.sql.SQLException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.PlatformTransactionManager;
 import springbook.ExceptionUserService.UserServiceTestException;
+import springbook.dao.MockUserDao;
 import springbook.dao.UserDao;
 import springbook.service.UserService;
 import springbook.service.UserServiceImpl;
@@ -57,7 +57,7 @@ class UserServiceTest {
 
     @DisplayName("조건에 따른 레벨 변경")
     @Test
-    void upgradeLevels() throws SQLException {
+    void upgradeLevels() {
         final var basicShouldNotBeUpgraded = new User("cat", "고양이", "password", Level.BASIC, Level.SILVER.login - 1, 0);
         final var basicShouldBeSilver = new User("dog", "개", "password", Level.BASIC, Level.SILVER.login, 0);
         final var silverShouldNotBeUpgraded = new User("bird", "새", "password", Level.SILVER, 60,
@@ -78,13 +78,20 @@ class UserServiceTest {
             userDao.add(user);
         }
 
-        userService.upgradeLevels();
+        final var mockUserDao = new MockUserDao(users);
+        final var userServiceImpl = new UserServiceImpl(mockUserDao);
 
-        assertLevelUpgraded(basicShouldNotBeUpgraded, false);
-        assertLevelUpgraded(basicShouldBeSilver, true);
-        assertLevelUpgraded(silverShouldNotBeUpgraded, false);
-        assertLevelUpgraded(silverShouldBeGold, true);
-        assertLevelUpgraded(basicShouldNotBeUpgraded, false);
+        userServiceImpl.upgradeLevels();
+
+        final var updated = mockUserDao.getUpdated();
+
+        assertThat(updated).hasSize(2);
+
+        assertThat(updated.get(0).getId()).isEqualTo(basicShouldBeSilver.getId());
+        assertThat(updated.get(0).getLevel()).isEqualTo(Level.SILVER);
+
+        assertThat(updated.get(1).getId()).isEqualTo(silverShouldBeGold.getId());
+        assertThat(updated.get(1).getLevel()).isEqualTo(Level.GOLD);
     }
 
     private void assertLevelUpgraded(final User user, final boolean upgraded) {
