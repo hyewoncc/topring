@@ -2,17 +2,18 @@ package springbook;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.lang.reflect.Proxy;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.PlatformTransactionManager;
 import springbook.ExceptionUserService.UserServiceTestException;
 import springbook.dao.MockUserDao;
 import springbook.dao.UserDao;
-import springbook.service.TransactionHandler;
+import springbook.service.TxProxyFactoryBean;
 import springbook.service.UserService;
 import springbook.service.UserServiceImpl;
 import springbook.user.Level;
@@ -20,6 +21,9 @@ import springbook.user.User;
 
 @SpringBootTest
 class UserServiceTest {
+
+    @Autowired
+    private ApplicationContext context;
 
     @Autowired
     private PlatformTransactionManager transactionManager;
@@ -106,7 +110,8 @@ class UserServiceTest {
 
     @DisplayName("예외 발생 시 모두 롤백")
     @Test
-    void updateAll_throwsException_rollbackAll() {
+    @DirtiesContext
+    void updateAll_throwsException_rollbackAll() throws Exception {
         final var basicShouldNotBeUpgraded = new User("a_cat", "고양이", "password", Level.BASIC, Level.SILVER.login - 1,
                 0);
         final var basicShouldBeSilver = new User("b_dog", "개", "password", Level.BASIC, Level.SILVER.login, 0);
@@ -125,11 +130,10 @@ class UserServiceTest {
 
         UserServiceImpl testUserService = new ExceptionUserService(userDao, silverShouldNotBeUpgraded.getId());
 
-        final var transactionHandler = new TransactionHandler(testUserService, transactionManager, "upgradeLevels");
-        final var userServiceTx = (UserService) Proxy.newProxyInstance(
-                getClass().getClassLoader(),
-                new Class[]{UserService.class},
-                transactionHandler);
+        final var txProxyFactoryBean = context.getBean("&userService", TxProxyFactoryBean.class);
+        txProxyFactoryBean.setTarget(testUserService);
+
+        final var userServiceTx = (UserService) txProxyFactoryBean.getObject();
 
         userDao.deleteAll();
         for (User user : users) {

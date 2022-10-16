@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import springbook.dao.UserDaoJdbc;
+import springbook.service.TxProxyFactoryBean;
 import springbook.service.UserService;
 import springbook.service.UserServiceImpl;
-import springbook.service.UserServiceTx;
 
 @SpringBootConfiguration
 public class AppConfig {
@@ -19,8 +19,8 @@ public class AppConfig {
     }
 
     @Bean
-    public UserService userService() {
-        return new UserServiceTx(userServiceImpl(), transactionManager());
+    public TxProxyFactoryBean userService() {
+        return new TxProxyFactoryBean(userServiceImpl(), transactionManager(), "upgradeLevels", UserService.class);
     }
 
     @Bean
