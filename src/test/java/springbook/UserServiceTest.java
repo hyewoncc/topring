@@ -2,6 +2,7 @@ package springbook;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.lang.reflect.Proxy;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,9 +12,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 import springbook.ExceptionUserService.UserServiceTestException;
 import springbook.dao.MockUserDao;
 import springbook.dao.UserDao;
+import springbook.service.TransactionHandler;
 import springbook.service.UserService;
 import springbook.service.UserServiceImpl;
-import springbook.service.UserServiceTx;
 import springbook.user.Level;
 import springbook.user.User;
 
@@ -106,7 +107,8 @@ class UserServiceTest {
     @DisplayName("예외 발생 시 모두 롤백")
     @Test
     void updateAll_throwsException_rollbackAll() {
-        final var basicShouldNotBeUpgraded = new User("a_cat", "고양이", "password", Level.BASIC, Level.SILVER.login - 1, 0);
+        final var basicShouldNotBeUpgraded = new User("a_cat", "고양이", "password", Level.BASIC, Level.SILVER.login - 1,
+                0);
         final var basicShouldBeSilver = new User("b_dog", "개", "password", Level.BASIC, Level.SILVER.login, 0);
         final var silverShouldNotBeUpgraded = new User("c_bird", "새", "password", Level.SILVER, 60,
                 Level.GOLD.recommend - 1);
@@ -122,7 +124,12 @@ class UserServiceTest {
         );
 
         UserServiceImpl testUserService = new ExceptionUserService(userDao, silverShouldNotBeUpgraded.getId());
-        UserServiceTx userServiceTx = new UserServiceTx(testUserService, transactionManager);
+
+        final var transactionHandler = new TransactionHandler(testUserService, transactionManager, "upgradeLevels");
+        final var userServiceTx = (UserService) Proxy.newProxyInstance(
+                getClass().getClassLoader(),
+                new Class[]{UserService.class},
+                transactionHandler);
 
         userDao.deleteAll();
         for (User user : users) {
