@@ -18,7 +18,7 @@ public class JdbcBookmark {
     }
 
     public void batchInsert(final List<Bookmark> bookmarks) {
-        final String sql = "INSERT INTO BOOKMARK "
+        final String sql = "INSERT INTO bookmark "
                 + "(member_id, message_id, created_date) "
                 + "VALUES (?, ?, ?)";
 

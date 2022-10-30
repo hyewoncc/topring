@@ -19,7 +19,7 @@ public class JdbcReminder {
     }
 
     public void batchInsert(final List<Reminder> reminders) {
-        final String sql = "INSERT INTO REMINDER "
+        final String sql = "INSERT INTO reminder "
                 + "(member_id, message_id, remind_date) "
                 + "VALUES (?, ?, ?)";
 

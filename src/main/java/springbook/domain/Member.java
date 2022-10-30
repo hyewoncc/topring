@@ -12,6 +12,10 @@ public class Member {
 
     private boolean isFirstLogin = true;
 
+    private String token;
+
+    private Long workspaceId;
+
     public Member() {
     }
 
@@ -59,5 +63,21 @@ public class Member {
 
     public void setFirstLogin(final boolean firstLogin) {
         isFirstLogin = firstLogin;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(final String token) {
+        this.token = token;
+    }
+
+    public Long getWorkspaceId() {
+        return workspaceId;
+    }
+
+    public void setWorkspaceId(final Long workspaceId) {
+        this.workspaceId = workspaceId;
     }
 }

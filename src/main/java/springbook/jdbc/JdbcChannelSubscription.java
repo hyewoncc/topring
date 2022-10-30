@@ -18,7 +18,7 @@ public class JdbcChannelSubscription {
     }
 
     public void batchInsert(final List<ChannelSubscription> subscriptions) {
-        final String sql = "INSERT INTO CHANNEL_SUBSCRIPTION "
+        final String sql = "INSERT INTO channel_subscription "
                 + "(view_order, channel_id, member_id) "
                 + "VALUES (?, ?, ?)";
 

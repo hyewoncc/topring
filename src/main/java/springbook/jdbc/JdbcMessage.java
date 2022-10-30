@@ -19,7 +19,7 @@ public class JdbcMessage {
     }
 
     public void batchInsert(final List<Message> messages) {
-        final String sql = "INSERT INTO MESSAGE "
+        final String sql = "INSERT INTO message "
                 + "(modified_date, posted_date, slack_message_id, text, channel_id, member_id) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
 

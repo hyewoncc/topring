@@ -18,9 +18,9 @@ public class JdbcMember {
     }
 
     public void batchInsert(final List<Member> members) {
-        final String sql = "INSERT INTO MEMBER "
-                + "(first_login, slack_id, thumbnail_url, username) "
-                + "VALUES (?, ?, ?, ?)";
+        final String sql = "INSERT INTO member "
+                + "(first_login, slack_id, thumbnail_url, username, token, workspace_id) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
@@ -31,6 +31,8 @@ public class JdbcMember {
                 ps.setString(2, member.getSlackId());
                 ps.setString(3, member.getThumbnailUrl());
                 ps.setString(4, member.getUsername());
+                ps.setString(5, member.getToken());
+                ps.setLong(6, member.getWorkspaceId());
             }
 
             @Override

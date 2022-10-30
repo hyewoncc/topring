@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.UUID;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import springbook.domain.Message;
 import springbook.domain.Reminder;
 
 @SpringBootTest
+@Disabled
 class JdbcMessageTest {
 
     @Autowired
@@ -63,7 +65,7 @@ class JdbcMessageTest {
     @Test
     void messageBulkInsertToTest() {
         final int loop = 10;
-        LocalDateTime localDateTime = LocalDateTime.of(2000, 1, 1, 0, 0);
+        LocalDateTime localDateTime = LocalDateTime.of(1990, 1, 1, 0, 0);
         int time_plus = 0;
         for (int j = 0; j < loop; j++) {
             System.out.println(j + " loop");
@@ -103,7 +105,7 @@ class JdbcMessageTest {
         final int bookmarkPerMember = 300;
 
         for (int x = 1; x < memberSize + 1; x++) {
-            LocalDateTime localDateTime = LocalDateTime.of(2010, 10, 10, 0, 0, 0);
+            LocalDateTime localDateTime = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
             Bookmark[] bookmarks = new Bookmark[bookmarkPerMember];
 
             for (int y = 0; y < bookmarkPerMember; y++) {
@@ -124,11 +126,10 @@ class JdbcMessageTest {
     @DisplayName("리마인더 벌크 인서트")
     @Test
     void reminderInsert() {
-        EmptyResultDataAccessException
         final int memberSize = 2_000;
         final int reminderPerMember = 300;
 
-        LocalDateTime localDateTime = LocalDateTime.of(2005, 1, 1, 0, 0);
+        LocalDateTime localDateTime = LocalDateTime.of(2000, 1, 1, 0, 0);
 
         for (int x = 1; x < memberSize + 1; x++) {
             Reminder[] reminders = new Reminder[reminderPerMember];

@@ -8,6 +8,8 @@ public class Channel {
 
     private String name;
 
+    private Long workspaceId;
+
     public Channel() {
     }
 
@@ -38,5 +40,13 @@ public class Channel {
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+    public Long getWorkspaceId() {
+        return workspaceId;
+    }
+
+    public void setWorkspaceId(final Long workspaceId) {
+        this.workspaceId = workspaceId;
     }
 }

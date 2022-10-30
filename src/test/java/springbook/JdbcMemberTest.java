@@ -1,8 +1,12 @@
 package springbook;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +14,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import springbook.domain.Channel;
 import springbook.domain.ChannelSubscription;
 import springbook.domain.Member;
+import springbook.domain.Workspace;
 import springbook.jdbc.JdbcChannel;
 import springbook.jdbc.JdbcChannelSubscription;
 import springbook.jdbc.JdbcMember;
+import springbook.jdbc.JdbcWorkspace;
 
 @SpringBootTest
+@Disabled
 class JdbcMemberTest {
 
     @Autowired
@@ -25,6 +32,27 @@ class JdbcMemberTest {
 
     @Autowired
     private JdbcChannelSubscription jdbcChannelSubscription;
+
+    @Autowired
+    private JdbcWorkspace jdbcWorkspace;
+
+    @DisplayName("빈 테스트")
+    @Test
+    void empty() {
+        final var num = 1;
+        assertThat(num).isLessThan(2);
+    }
+
+    @DisplayName("워크스페이스 생성")
+    @Test
+    void workspaceInsert() {
+        Workspace workspace = new Workspace();
+        workspace.setSlackId("TESTWORKSPACE");
+        workspace.setBotToken("TESTBOTTOKEN");
+        workspace.setBotSlackId("TESTSLACKBOT");
+
+        jdbcWorkspace.batchInsert(List.of(workspace));
+    }
 
     @DisplayName("멤버 벌크 인서트")
     @Test
