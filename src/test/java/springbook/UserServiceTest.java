@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
@@ -13,7 +14,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import springbook.ExceptionUserService.UserServiceTestException;
 import springbook.dao.MockUserDao;
 import springbook.dao.UserDao;
-import springbook.service.TxProxyFactoryBean;
 import springbook.service.UserService;
 import springbook.service.UserServiceImpl;
 import springbook.user.Level;
@@ -130,10 +130,10 @@ class UserServiceTest {
 
         UserServiceImpl testUserService = new ExceptionUserService(userDao, silverShouldNotBeUpgraded.getId());
 
-        final var txProxyFactoryBean = context.getBean("&userService", TxProxyFactoryBean.class);
-        txProxyFactoryBean.setTarget(testUserService);
+        final var proxyFactoryBean = context.getBean("&userService", ProxyFactoryBean.class);
+        proxyFactoryBean.setTarget(testUserService);
 
-        final var userServiceTx = (UserService) txProxyFactoryBean.getObject();
+        final var userServiceTx = (UserService) proxyFactoryBean.getObject();
 
         userDao.deleteAll();
         for (User user : users) {
